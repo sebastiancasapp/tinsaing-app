@@ -1,5 +1,5 @@
-import { API_CONFIG } from '../config/api';
-import { ApiError, RequestConfig } from '../types/auth';
+import { API_CONFIG } from "../config/api";
+import { ApiError, RequestConfig } from "../types/auth";
 
 class HttpClient {
   private baseURL: string;
@@ -14,8 +14,9 @@ class HttpClient {
 
   // Interceptor para agregar token automáticamente
   private getAuthHeaders(): Record<string, string> {
-    const token = localStorage.getItem('accessToken');
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    const token = localStorage.getItem("accessToken");
+    console.log("token", token);
+    return token ? { token } : {};
   }
 
   // Método principal para hacer requests
@@ -23,16 +24,18 @@ class HttpClient {
     const { url, method, data, params, headers = {} } = config;
 
     // Construir URL completa
-    const fullUrl = url.startsWith('http') ? url : `${this.baseURL}${url}`;
+    const fullUrl = url.startsWith("http") ? url : `${this.baseURL}${url}`;
 
     // Agregar parámetros de query si existen
-    const urlWithParams = params ? this.addQueryParams(fullUrl, params) : fullUrl;
+    const urlWithParams = params
+      ? this.addQueryParams(fullUrl, params)
+      : fullUrl;
 
     // Configurar headers
     const requestHeaders = {
       ...this.defaultHeaders,
       ...this.getAuthHeaders(),
-      ...headers
+      ...headers,
     };
 
     // Configurar AbortController para timeout
@@ -44,9 +47,9 @@ class HttpClient {
         method,
         headers: requestHeaders,
         body: data ? JSON.stringify(data) : undefined,
-        signal: controller.signal
+        signal: controller.signal,
       });
-      console.log("response", response)
+      console.log("response", response);
       clearTimeout(timeoutId);
 
       // Manejar respuestas no exitosas
@@ -55,8 +58,8 @@ class HttpClient {
       }
 
       // Intentar parsear JSON
-      const contentType = response.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
         return await response.json();
       }
 
@@ -76,12 +79,12 @@ class HttpClient {
     } catch {
       errorData = { message: response.statusText };
     }
-    
+
     const apiError: ApiError = {
-      message: errorData.message || 'Error en la petición',
+      message: errorData.message || "Error en la petición",
       code: errorData.code,
       status: response.status,
-      errors: errorData.errors
+      errors: errorData.errors,
     };
 
     // Manejar token expirado
@@ -94,36 +97,36 @@ class HttpClient {
 
   // Manejar errores de red/timeout
   private handleRequestError(error: any): ApiError {
-    if(error.code){
-        return {
-          message: error.message || 'Error de conexión',
-          code: error.code || 'NETWORK_ERROR'
-        }
+    if (error.code) {
+      return {
+        message: error.message || "Error de conexión",
+        code: error.code || "NETWORK_ERROR",
+      };
     }
-    
-    if (error.name === 'AbortError') {
-      return { message: 'Tiempo de espera agotado', code: 'TIMEOUT' };
+
+    if (error.name === "AbortError") {
+      return { message: "Tiempo de espera agotado", code: "TIMEOUT" };
     }
 
     if (!navigator.onLine) {
-      return { message: 'Sin conexión a internet', code: 'NETWORK_ERROR' };
+      return { message: "Sin conexión a internet", code: "NETWORK_ERROR" };
     }
 
     return {
-      message: error.message || 'Error de conexión',
-      code: 'NETWORK_ERROR'
+      message: error.message || "Error de conexión",
+      code: "NETWORK_ERROR",
     };
   }
 
   // Manejar token no autorizado
   private handleUnauthorized(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
 
     // Redirigir al login si es necesario
-    if (window.location.pathname !== '/login') {
-      window.location.href = '/login';
+    if (window.location.pathname !== "/login") {
+      window.location.href = "/login";
     }
   }
 
@@ -140,23 +143,23 @@ class HttpClient {
 
   // Métodos HTTP públicos
   async get<T>(url: string, params?: Record<string, any>): Promise<T> {
-    return this.request<T>({ url, method: 'GET', params });
+    return this.request<T>({ url, method: "GET", params });
   }
 
   async post<T>(url: string, data?: any): Promise<T> {
-    return this.request<T>({ url, method: 'POST', data });
+    return this.request<T>({ url, method: "POST", data });
   }
 
   async put<T>(url: string, data?: any): Promise<T> {
-    return this.request<T>({ url, method: 'PUT', data });
+    return this.request<T>({ url, method: "PUT", data });
   }
 
   async delete<T>(url: string): Promise<T> {
-    return this.request<T>({ url, method: 'DELETE' });
+    return this.request<T>({ url, method: "DELETE" });
   }
 
   async patch<T>(url: string, data?: any): Promise<T> {
-    return this.request<T>({ url, method: 'PATCH', data });
+    return this.request<T>({ url, method: "PATCH", data });
   }
 }
 

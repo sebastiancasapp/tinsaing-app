@@ -6,7 +6,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../components/Login/Login";
 import Dashboard from "../pages/Dashboard";
 import DocumentUploadForm from "../components/DocumentUploadForm/DocumentUploadForm";
-import ProductList from "../components/ProductList/ProductList";
+import ProductList from "../components/ProductionGuide/ProductionGuide";
 
 const AppRoutes: React.FC = () => {
   // const { isAuthenticated } = useAuth();
@@ -16,7 +16,7 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/documentupload" element={<DocumentUploadForm />} />
-      <Route path="/productlist" element={<ProductList />} />
+      <Route path="/production-guide" element={<ProductList />} />
 
       {/* Redirige cualquier ruta no autenticada al login */}
       {/* <Route

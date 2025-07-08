@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import styles from "./ProductList.module.css";
+import styles from "./ProductionGuide.module.css";
 import { productService } from "../../services/productServices";
 import { Product, ProductWithQuantity } from "../../types/product";
+import Loader from "../Loader/Loader";
 
 const ProductList: React.FC = () => {
   // Estados del componente
@@ -109,6 +110,7 @@ const ProductList: React.FC = () => {
     <>
       <div className={styles.container}>
         <div className={styles.card}>
+          <Loader />
           <div>
             <div style={{ textAlign: "center", marginBottom: "11px" }}>
               <img
@@ -129,12 +131,27 @@ const ProductList: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="flex justify-around items-center mb-4">
+          <div className="flex justify-between items-center mb-4 px-[20px] flex-wrap gap-2">
             <h3 className="">Creador, Sebastian Zapata</h3>
+            <input
+              className={styles.input}
+              placeholder="Fecha de Generación..."
+              autoComplete="search-product"
+              type="date"
+              autoFocus
+            />
             <button onClick={processList} className={styles.addButton}>
               Procesar Lista
             </button>
           </div>
+          {/* <div>
+            <textarea
+              id="message"
+              rows={3}
+              className={styles.textarea}
+              placeholder="Ingresa información referente al proyecto del cual se va a generar la guía..."
+            ></textarea>
+          </div> */}
           <div className={styles.searchinputcontainer}>
             <div className={styles.inputGroup}>
               <label htmlFor="search-product" className={styles.label}></label>
@@ -156,7 +173,7 @@ const ProductList: React.FC = () => {
                       className={styles.dropdownitem}
                       onClick={() => handleProductSelect(product)}
                     >
-                      {product.name}
+                      {`${product.item} ${product.name}`}
                     </div>
                   ))}
                 </div>
