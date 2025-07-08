@@ -1,6 +1,5 @@
 .container {
   min-height: 100vh;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -16,6 +15,8 @@
   padding: 2.5rem;
   width: 100%;
   max-width: 900px;
+  position: relative;
+  overflow: auto;
 }
 
 .searchinputcontainer {
@@ -128,6 +129,7 @@ h3 {
   flex-direction: column;
   position: relative;
   gap: 0.5rem;
+  width: 97%;
 }
 
 .label {
@@ -137,7 +139,13 @@ h3 {
   position: relative;
 }
 
-.input {
+.textarea {
+  display: block;
+  width: 97%;
+}
+
+.input,
+textarea {
   padding: 0.75rem 1rem;
   border: 1px solid #d1d5db;
   border-radius: 8px;
@@ -146,12 +154,14 @@ h3 {
   background: white;
 }
 
-.input:focus {
+.input:focus,
+textarea:focus {
   outline: none;
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
-.input::placeholder {
+.input::placeholder,
+.textarea::placeholder {
   color: #9ca3af;
 }
